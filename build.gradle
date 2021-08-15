@@ -18,6 +18,12 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    set('springCloudVersion', "2020.0.3")
+    set('testcontainersVersion', "1.15.3")
+    set('mockitoVersion', "3.11.2")
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -27,7 +33,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation group: 'com.sendgrid', name: 'sendgrid-java', version: '4.7.0'
+    implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.6.0'
 
+    implementation 'commons-validator:commons-validator:1.4.1'
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${mockitoVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: "${mockitoVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: "${mockitoVersion}"
+    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.20.2'
 }
 
 test {
