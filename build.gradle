@@ -24,6 +24,15 @@ ext {
     set('mockitoVersion', "3.11.2")
 }
 
+configurations {
+    acceptanceCompile.extendsFrom testCompile
+    acceptanceRuntime.extendsFrom testRuntime
+    acceptanceImplementation.extendsFrom testImplementation
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -33,16 +42,60 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation group: 'com.sendgrid', name: 'sendgrid-java', version: '4.7.0'
-    implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.6.0'
 
+    // unit testing
+    implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.6.0'
     implementation 'commons-validator:commons-validator:1.4.1'
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${mockitoVersion}"
     testImplementation group: 'org.mockito', name: 'mockito-core', version: "${mockitoVersion}"
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: "${mockitoVersion}"
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.20.2'
+
+    // cucumber
+    implementation group: 'io.cucumber', name: 'cucumber-core', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit-platform-engine', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: '6.10.4'
+
+    // wiremock
+    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '2.27.2'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+
+//    testImplementation("org.junit.jupiter:junit-jupiter-api:latest.release") {
+//        because("we want to use JUnit 5 assertions")
+//    }
+
+
+
+}
+
+sourceSets {
+    acceptance {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/bdd/java')
+        }
+        resources.srcDir file('src/bdd/resources')
+    }
+}
+
+task acceptance(type: Test) {
+    useJUnitPlatform()
+    setTestClassesDirs(sourceSets.acceptance.output)
+    classpath = sourceSets.acceptance.runtimeClasspath
+    testLogging.showStandardStreams = true
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 test {
     useJUnitPlatform()
+    testLogging.showStandardStreams = true
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
