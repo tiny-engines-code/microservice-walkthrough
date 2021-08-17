@@ -25,9 +25,9 @@ ext {
 }
 
 configurations {
-    acceptanceCompile.extendsFrom testCompile
-    acceptanceRuntime.extendsFrom testRuntime
-    acceptanceImplementation.extendsFrom testImplementation
+//    acceptanceCompile.extendsFrom testCompile
+//    acceptanceRuntime.extendsFrom testRuntime
+//    acceptanceImplementation.extendsFrom testImplementation
     cucumberRuntime {
         extendsFrom testImplementation
     }
@@ -52,45 +52,39 @@ dependencies {
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.20.2'
 
-    // cucumber
-    implementation group: 'io.cucumber', name: 'cucumber-core', version: '6.10.4'
-    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
-    testImplementation group: 'io.cucumber', name: 'cucumber-junit-platform-engine', version: '6.10.4'
-    testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: '6.10.4'
-
     // wiremock
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '2.27.2'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // Cucumber
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.11.0'
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit-platform-engine', version: '6.11.0'
+    testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: '6.11.0'
+    testImplementation group: 'io.cucumber', name: 'cucumber-core', version: '6.11.0'
 
-//    testImplementation("org.junit.jupiter:junit-jupiter-api:latest.release") {
-//        because("we want to use JUnit 5 assertions")
+
+}
+//
+//sourceSets {
+//    acceptance {
+//        java {
+//            compileClasspath += main.output + test.output
+//            runtimeClasspath += main.output + test.output
+//            srcDir file('src/sendgridmailer/java')
+//        }
+//        resources.srcDir file('src/sendgridmailer/resources')
 //    }
+//}
 
-
-
-}
-
-sourceSets {
-    acceptance {
-        java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-            srcDir file('src/bdd/java')
-        }
-        resources.srcDir file('src/bdd/resources')
-    }
-}
-
-task acceptance(type: Test) {
-    useJUnitPlatform()
-    setTestClassesDirs(sourceSets.acceptance.output)
-    classpath = sourceSets.acceptance.runtimeClasspath
-    testLogging.showStandardStreams = true
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-}
+//task acceptance(type: Test) {
+//    useJUnitPlatform()
+//    setTestClassesDirs(sourceSets.acceptance.output)
+//    classpath = sourceSets.acceptance.runtimeClasspath
+//    testLogging.showStandardStreams = true
+//    testLogging {
+//        events "passed", "skipped", "failed"
+//    }
+//}
 
 test {
     useJUnitPlatform()
