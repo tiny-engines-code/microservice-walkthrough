@@ -1,7 +1,7 @@
-package com.chrislomeli.mailermicroservice.controller;
+package com.chrislomeli.mailermicroservice.ut.controller;
 
-import com.chrislomeli.mailermicroservice.service.SendgridMailer;
-import com.chrislomeli.mailermicroservice.service.SendgridRequest;
+import com.chrislomeli.mailermicroservice.ut.service.SendgridMailer;
+import com.chrislomeli.mailermicroservice.ut.service.SendgridRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -54,9 +54,11 @@ public class SendgridHandler {
                 throw new NullPointerException("mailer returned unexpected null");
             return  response;
         } catch (JsonProcessingException |  IllegalArgumentException ex) {
-            return new Response(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), Map.of("Content-type", "application/json"));
+            return new Response(HttpStatus.BAD_REQUEST.value(), ex.getMessage(),
+                    Map.of("Content-type", "application/json", "X-Source", "json-format"));
         }  catch (Exception ex) {
-            return new Response(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), Map.of("Content-type", "application/json"));
+            return new Response(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(),
+                    Map.of("Content-type", "application/json", "X-Source", "application-error"));
         }
     }
 

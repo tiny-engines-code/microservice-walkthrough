@@ -1,4 +1,4 @@
-package com.chrislomeli.mailermicroservice.service;
+package com.chrislomeli.mailermicroservice.ut.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

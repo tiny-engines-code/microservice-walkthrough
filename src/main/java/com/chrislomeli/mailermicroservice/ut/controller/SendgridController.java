@@ -1,4 +1,4 @@
-package com.chrislomeli.mailermicroservice.controller;
+package com.chrislomeli.mailermicroservice.ut.controller;
 
 import com.sendgrid.Response;
 import org.springframework.http.HttpHeaders;

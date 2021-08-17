@@ -1,4 +1,4 @@
-package com.chrislomeli.mailermicroservice.service;
+package com.chrislomeli.mailermicroservice.ut.service;
 
 import com.sendgrid.Client;
 import com.sendgrid.Method;
@@ -8,16 +8,14 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -30,27 +28,23 @@ import java.util.function.Predicate;
  */
 @Slf4j
 @Component
-public class SendgridMailer {
-
-    @Value("${sendgrid.auth.key:noauth}")
-    String apiKeyValue;
-
-    @Value("${sendgrid.api.version:4.7.0}")
-    String sdkVersion;
-
-    @Value("${sendgrid.version:v3}")
-    String apiVersion;
-
-    @Value("${sendgrid.host:api.sendgrid.com}")
-    String host;
+public class SendgridMailer implements ApplicationContextAware {
 
     private final Client client;
+
+    private static SendgridProperties sendgridProperties;
 
     public SendgridMailer() {
         this.client = new Client();
     }
+
     public SendgridMailer(Client injectClient) {
         this.client = injectClient;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        sendgridProperties = (SendgridProperties) applicationContext.getBean("sendgridProperties");
     }
 
     /* simple for a textbook implementation */
@@ -64,21 +58,6 @@ public class SendgridMailer {
                 validEmail.test(sendgridRequest.getToAddress());
     }
 
-    public void setApiKeyValue(String apiKeyValue) {
-        this.apiKeyValue = apiKeyValue;
-    }
-
-    public void setSdkVersion(String sdkVersion) {
-        this.sdkVersion = sdkVersion;
-    }
-
-    public void setApiVersion(String apiVersion) {
-        this.apiVersion = apiVersion;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
 
     /**
      * Convert user request to a SendGrid Mail object
@@ -87,7 +66,7 @@ public class SendgridMailer {
 
         // simplistic validation for this example
         if (!validRequest(mailRequest))
-            return new Response(HttpStatus.BAD_REQUEST.value(), "<field list>", Map.of("Content-type", "application/json"));
+            return new Response(HttpStatus.BAD_REQUEST.value(), "<field list>", Map.of("Content-type", "application/json","X-Source", "data-validation"));
 
         // Create a SendGrid Mail object
         Mail mailer = createSendGridMail(mailRequest);
@@ -95,11 +74,11 @@ public class SendgridMailer {
         // Create a SendGrid Request
         final Request request = new Request();
         request.setMethod(Method.POST);
-        request.setEndpoint("/" + apiVersion + "/" + "mail/send");
+        request.setEndpoint("/" + sendgridProperties.apiVersion + "/" + "mail/send");
         request.setBody(mailer.build());
-        request.setBaseUri(this.host);
-        request.addHeader("User-Agent", "sendgrid/" + apiVersion + ";java");
-        request.addHeader("Authorization", "Bearer " + apiKeyValue);
+        request.setBaseUri(sendgridProperties.host);
+        request.addHeader("User-Agent", "sendgrid/" + sendgridProperties.apiVersion + ";java");
+        request.addHeader("Authorization", "Bearer " + sendgridProperties.apiKeyValue);
         request.addHeader("Accept", "application/json");
 
         // Send to the SendGrid API

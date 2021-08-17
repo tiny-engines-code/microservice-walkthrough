@@ -1,6 +1,6 @@
-package com.chrislomeli.mailermicroservice.service;
+package com.chrislomeli.mailermicroservice.ut.service;
 
-import com.chrislomeli.mailermicroservice.controller.SendgridHandler;
+import com.chrislomeli.mailermicroservice.ut.controller.SendgridHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -17,6 +17,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,9 @@ class SendGridMailerTest {
     String host = "api.sendgrid.com";
 
     static ObjectMapper mapper = new ObjectMapper();
+
+    @Autowired
+    SendgridProperties sendgridProperties;
 
     @Mock
     private Client sendGridClient;
@@ -76,6 +80,7 @@ class SendGridMailerTest {
         );
     }
 
+
     /*-------------------------------------------------
       Handle payload buiness scenarios
         missing fields, bad formatting, etc.
@@ -88,10 +93,10 @@ class SendGridMailerTest {
 
         // create an input sendgridRequest based on the parameterized values passed in and set properties
         var mailer = new SendgridMailer(sendGridClient);
-        mailer.apiKeyValue = this.apiKeyValue;
-        mailer.host = this.host;
-        mailer.apiVersion = this.apiVersion;
-        mailer.sdkVersion = this.sdkVersion;
+        sendgridProperties.setHost("mocked");
+        sendgridProperties.setApiKeyValue(this.apiKeyValue);
+        sendgridProperties.setApiVersion( this.apiVersion );
+        sendgridProperties.setSdkVersion( this.sdkVersion );
 
         // call SendgridMailer::send
         var response = mailer.send(
@@ -118,7 +123,6 @@ class SendGridMailerTest {
             assertThat(request.getHeaders().getOrDefault("Authorization", "")).isEqualTo("Bearer " + apiKeyValue);
         } else {
             verifyNoInteractions(sendGridClient);
-
         }
     }
 
@@ -157,10 +161,12 @@ class SendGridMailerTest {
 
         lenient().when(sendGridClient.api(any(Request.class))).thenReturn(new Response(HttpStatus.OK.value(), "{}", null));
         var mailer = new SendgridMailer(sendGridClient);
-        mailer.apiKeyValue = this.apiKeyValue;
-        mailer.host = this.host;
-        mailer.apiVersion = this.apiVersion;
-        mailer.sdkVersion = this.sdkVersion;
+
+        sendgridProperties.setHost("mocked");
+        sendgridProperties.setApiKeyValue(this.apiKeyValue);
+        sendgridProperties.setApiVersion( this.apiVersion );
+        sendgridProperties.setSdkVersion( this.sdkVersion );
+
         var response = mailer.send(sendgridRequest);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
 

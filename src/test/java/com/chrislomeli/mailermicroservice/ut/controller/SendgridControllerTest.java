@@ -1,6 +1,6 @@
-package com.chrislomeli.mailermicroservice.controller;
+package com.chrislomeli.mailermicroservice.ut.controller;
 
-import com.chrislomeli.mailermicroservice.service.SendgridRequest;
+import com.chrislomeli.mailermicroservice.ut.service.SendgridRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sendgrid.Response;

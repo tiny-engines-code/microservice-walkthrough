@@ -1,15 +1,21 @@
-package com.chrislomeli.mailermicroservice.controller;
+package com.chrislomeli.mailermicroservice.ut.controller;
 
-import com.chrislomeli.mailermicroservice.service.SendgridMailer;
-import com.chrislomeli.mailermicroservice.service.SendgridRequest;
+import com.chrislomeli.mailermicroservice.ut.service.SendgridMailer;
+import com.chrislomeli.mailermicroservice.ut.service.SendgridProperties;
+import com.chrislomeli.mailermicroservice.ut.service.SendgridRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sendgrid.Client;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 
 import java.util.stream.IntStream;
@@ -20,8 +26,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
+@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 class SendgridHandlerTest {
+    String apiKeyValue = "myAPIKey";
+    String sdkVersion = "4.7.0";
+    String apiVersion = "v3";
+    String host = "api.sendgrid.com";
+
     static ObjectMapper mapper = new ObjectMapper();
+
+    @Autowired
+    SendgridProperties sendgridProperties;
 
     static Stream<Integer> statusCodeProvider() {
         return Stream.of(
@@ -64,9 +81,16 @@ class SendgridHandlerTest {
     @ParameterizedTest // all status codes
     @MethodSource("statusCodeProvider")
     void handles_all_return_codes(Integer intCode) throws Exception {
-        var client = mock(Client.class);
-        when(client.api(any(Request.class))).thenReturn(new Response(intCode, "{}", null));
-        var response = new SendgridHandler(new SendgridMailer(client)).requestHandler(createRequest());
+        var sendGridClient = mock(Client.class);
+        when(sendGridClient.api(any(Request.class))).thenReturn(new Response(intCode, "{}", null));
+
+        var mailer = new SendgridMailer(sendGridClient);
+        sendgridProperties.setHost("mocked");
+        sendgridProperties.setApiKeyValue(this.apiKeyValue);
+        sendgridProperties.setApiVersion( this.apiVersion );
+        sendgridProperties.setSdkVersion( this.sdkVersion );
+
+        var response = new SendgridHandler(mailer).requestHandler(createRequest());
         assertEquals(response.getStatusCode(), intCode);
     }
 

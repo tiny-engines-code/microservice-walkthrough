@@ -1,8 +1,7 @@
-package com.chrislomeli.mailermicroservice.service;
+package com.chrislomeli.mailermicroservice.ut.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
