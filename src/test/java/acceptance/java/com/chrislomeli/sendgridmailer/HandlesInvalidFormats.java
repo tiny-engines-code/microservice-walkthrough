@@ -52,7 +52,7 @@ public class HandlesInvalidFormats extends CucumberSpringConfiguration{
         sendgridProperties.setSdkVersion(this.sdkVersion);
     }
 
-    @When("I am sending the following emails")
+    @When("I am sending valid and invalid emails")
     public void i_am_sending_the_following_emails(io.cucumber.datatable.DataTable dataTable) {
         this.testSuite = new ArrayList<>();
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
@@ -71,7 +71,7 @@ public class HandlesInvalidFormats extends CucumberSpringConfiguration{
         }
     }
 
-    @Then("Then I should receive the expected reponses")
+    @Then("Validation errors should be caught before being sent to the API")
     public void then_i_should_receive_the_expected_reponses() {
         this.testSuite.forEach(x -> handle_invalid_formats(x.getLeft(), x.getRight()));
     }

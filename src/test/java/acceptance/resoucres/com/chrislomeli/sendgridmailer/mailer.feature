@@ -3,7 +3,7 @@ Feature: Sendgrid acceptance test example
 
   Scenario: Invalid values should be caught before sending to the API
     Given the API is available
-    When I am sending the following emails
+    When I am sending valid and invalid emails
       | sender | from           | to              | subject     | args             | body                     | expected |
       | "me"   | me@gmail.com   | you@gmail.com   | Hello world | {"head": "bang"} | I was a teenage werewolf | 200      |
       | "john" | me@gmail.com   | ERROR.gmail.com | Hello world | {"head": "bang"} | I was a teenage werewolf | 400      |
@@ -12,7 +12,7 @@ Feature: Sendgrid acceptance test example
       | "me"   | me@gmail.com   | you@gmail.com   | Hello world |                  | I was a teenage werewolf | 200      |
       | "me"   | me@gmail.com   | you@gmail.com   | Hello world | {"head": "bang"} |                          | 200      |
       |        | me@gmail.com   | you@gmail.com   | Hello world | {"head": "bang"} | I was a teenage werewolf | 200      |
-    Then Then I should receive the expected reponses
+    Then Validation errors should be caught before being sent to the API
 
   Scenario: The solution should handle anything Sendgrid can throw at us
     Given I am sending any well-formated email
