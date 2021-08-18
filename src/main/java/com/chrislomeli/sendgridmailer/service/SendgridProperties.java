@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties("api.connection")
 public class SendgridProperties {
-    @Value("${sendgrid.auth.key:noauth}")
+    @Value("${sendgrid.auth.key}")
     String apiKeyValue;
 
     @Value("${sendgrid.api.version:4.7.0}")

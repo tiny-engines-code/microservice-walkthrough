@@ -63,6 +63,9 @@ public class SendgridMailer implements ApplicationContextAware {
      * Convert user request to a SendGrid Mail object
      */
     public Response send(SendgridRequest mailRequest) throws IOException {
+        // simplistic validation for this example
+        if (sendgridProperties.apiKeyValue == null)
+            throw new RuntimeException("API key was not set - this should be set in an environment variable");
 
         // simplistic validation for this example
         if (!validRequest(mailRequest))
