@@ -6,7 +6,7 @@ target/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-secrets.env
+i*.env
 
 ### STS ###
 .apt_generated
