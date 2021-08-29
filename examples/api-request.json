@@ -1,0 +1,43 @@
+{
+  "from": {
+    "name": "me",
+    "email": "sender@gmail.com"
+  },
+  "subject": "This is my email",
+  "personalizations": [
+    {
+      "to": [
+        {
+          "email": "receiver@gmail.com"
+        }
+      ]
+    }
+  ],
+  "content": [
+    {
+      "type": "text/html",
+      "value": "This is content. Click here to create a click event: http://www.google.com"
+    }
+  ],
+  "custom_args": {
+    "attachment_id": "aaaaaaaaaaa",
+    "comm_id": "aaaaaaaaaaa",
+    "cp_code": "aaaaaaaaaaa",
+    "mail-id": "a3c0cd9d-bd9c-4461-babc-c7b2c62044cf",
+    "notification_id": "aaaaaaaaaaa",
+    "send_id": "aaaaaaaaaaa"
+  },
+  "tracking_settings": {
+    "click_tracking": {
+      "enable": true,
+      "enable_text": true
+    },
+    "open_tracking": {
+      "enable": true
+    }
+  },
+  "reply_to": {
+    "name": "me",
+    "email": "sender@gmail.com"
+  }
+}

@@ -14,7 +14,6 @@ public class WireMockInitializer
 
     @Override
     public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-//        WireMockServer wireMockServer = new WireMockServer(new WireMockConfiguration().port(3000));
         WireMockServer wireMockServer = new WireMockServer(new WireMockConfiguration().dynamicPort());
         wireMockServer.start();
 

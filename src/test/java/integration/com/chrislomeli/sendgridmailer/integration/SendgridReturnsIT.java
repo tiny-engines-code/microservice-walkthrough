@@ -84,13 +84,13 @@ class SendgridReturnsIT {
     @ParameterizedTest
     @MethodSource("statusCodeProvider")
     void handle_valid_email_format_scenario(int expectedStatusValue) throws JsonProcessingException {
-        /* --- GIVEN a valid email format is submitted ---*/
+        /* --- a valid email format is submitted so that it can get all the way to the Sendgrid client---*/
         var thisEmail = validJsonEmail;
 
-        /* --- WHEN the expected server response is {triggered.nike.com} ---*/
+        /* --- We'll have the Wiremock return the specific http code that was passed in for this iteration ---*/
         var expectedStatus = HttpStatus.valueOf(expectedStatusValue);
 
-        /* --- AND We call the service ---*/
+        /* --- We configure Wiremock to mock the real SendGrid API---*/
         var matchUrl = "/" + this.apiVersion + "/" + "mail/send";
         this.wireMockServer.stubFor(
                 post(urlMatching(matchUrl))
@@ -99,10 +99,11 @@ class SendgridReturnsIT {
                                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                                 .withBody(responseBody(expectedStatus.value()))));
 
+        // We call the Controller at the very bgining of the stack
         SendgridController sendgridController = new SendgridController(new SendgridHandler(mailer));
         var response = sendgridController.handleRequest(thisEmail);
 
-        /* --- THEN we will recieve expected status ---*/
+        /* --- THEN we should recieve the expected status and pass it back up the stack to the user ---*/
         assertThat(response.getStatusCode()).isEqualTo(expectedStatus);
     }
 

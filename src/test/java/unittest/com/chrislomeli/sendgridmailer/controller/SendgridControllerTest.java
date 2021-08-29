@@ -88,19 +88,29 @@ class SendgridControllerTest {
         var statusCode = HttpStatus.METHOD_NOT_ALLOWED;
         mockMvc.perform(MockMvcRequestBuilders.get("/email/v2/send")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"bad }")
+                .content(content)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(result -> assertEquals("Status", statusCode.value(), result.getResponse().getStatus()));
     }
 
     @Test
-    void handles_bad_url() throws Exception {
+    void handles_bad_path() throws Exception {
         var statusCode = HttpStatus.NOT_FOUND;
-        mockMvc.perform(MockMvcRequestBuilders.post("/email/v1/send")
+        mockMvc.perform(MockMvcRequestBuilders.post("/email/BAD/send")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"bad }")
+                .content(content)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(result -> assertEquals("Status", statusCode.value(), result.getResponse().getStatus()));
+    }
+
+    @Test
+    void handles_empty_json() throws Exception {
+        var expectedStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        mockMvc.perform(MockMvcRequestBuilders.post("/email/v2/send")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(result -> assertEquals("Status", expectedStatus.value(), result.getResponse().getStatus()));
     }
 
     /*-----------------------------------------------------------------
@@ -142,15 +152,7 @@ class SendgridControllerTest {
                 .andExpect(result -> assertEquals("Status", expectedStatus.value(), result.getResponse().getStatus()));
     }
 
-    @Test
-    void handles_empty_json() throws Exception {
-        var expectedStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        mockMvc.perform(MockMvcRequestBuilders.post("/email/v2/send")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Status", expectedStatus.value(), result.getResponse().getStatus()));
-    }
+
 
 
 }

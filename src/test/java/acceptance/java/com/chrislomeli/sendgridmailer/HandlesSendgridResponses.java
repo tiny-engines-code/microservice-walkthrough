@@ -27,7 +27,7 @@ public class HandlesSendgridResponses {
         static ObjectMapper mapper = new ObjectMapper();
 
         @Autowired
-        private WireMockServer wireMockServer;
+        private WireMockServer wireMockServer;  // Use wiremock to
 
         @Autowired
         SendgridProperties sendgridProperties;

@@ -86,11 +86,6 @@ class SendGridMailerTest {
         );
     }
 
-    @BeforeEach
-    void setup() {
-
-    }
-
     /*-------------------------------------------------
       Handle payload buiness scenarios
         missing fields, bad formatting, etc.
@@ -137,7 +132,6 @@ class SendGridMailerTest {
 
     /*-------------------------------------------------
       Handle Client API throws
-
      */
     @Test
     void test_client_send_throws() throws Exception {
@@ -150,7 +144,6 @@ class SendGridMailerTest {
                 () -> assertEquals("Badd JuJu", response.getBody())
         );
     }
-
 
     /*------------------------------------------------------
       Check that when the request makes it to the sendgrid API

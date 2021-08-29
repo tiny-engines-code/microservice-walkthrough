@@ -5,6 +5,5 @@
   "subject": "This is my email",
   "content": "This is content. Click here to create a click event: http://www.google.com",
   "customArgs": {
-    "mycounter": 60000
   }
 }
