@@ -65,16 +65,24 @@ class SendgridHandlerTest {
        handle json input
      */
     @Test
+    void test_handle_bad_json_input_returns_400() throws Exception {
+        // when the handler's  requestHandler() method is called with bad json
+        var response = new SendgridHandler(new SendgridMailer()).requestHandler("{ \"name\":\"jo}");
+        // then it should return a BAD REQUEST Response object
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     void test_handle_null_input_returns_400() throws Exception {
         var response = new SendgridHandler(new SendgridMailer()).requestHandler(null);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Test
-    void test_handle_bad_json_input_returns_400() throws Exception {
-        var response = new SendgridHandler(new SendgridMailer()).requestHandler("{ \"name\":\"jo}");
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-    }
+//    @Test
+//    void test_handle_bad_json_input_returns_400() throws Exception {
+//        var response = new SendgridHandler(new SendgridMailer()).requestHandler("{ \"name\":\"jo}");
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+//    }
 
     /*----------------------------------
        SendGridMailer.send() return values
@@ -95,19 +103,23 @@ class SendgridHandlerTest {
         assertEquals(response.getStatusCode(), intCode);
     }
 
-    @Test // throws
-    void handles_requestHandler_null() throws Exception {
+    @Test
+    void handles_requestHandler_exception() throws Exception {
+        // when the handler calls the mailer and it throws an exception
         var sendGridMailer = mock(SendgridMailer.class);
         when(sendGridMailer.send(any(SendgridRequest.class))).thenThrow(new RuntimeException("Badd JuJu"));
         var response = new SendgridHandler(sendGridMailer).requestHandler(createRequest());
+
+        // then the handler witch return a valid Respose object
         assertAll(
                 () -> assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
                 () -> assertEquals("Badd JuJu", response.getBody())
         );
     }
 
+
     @Test // throws
-    void handles_requestHandler_exception() throws Exception {
+    void handles_requestHandler_null() throws Exception {
         var sendGridMailer = mock(SendgridMailer.class);
         when(sendGridMailer.send(any(SendgridRequest.class))).thenReturn(null);
         var response = new SendgridHandler(sendGridMailer).requestHandler(createRequest());
