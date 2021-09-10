@@ -16,6 +16,7 @@ configurations {
 
 repositories {
     mavenCentral()
+
 }
 
 ext {
@@ -58,6 +59,8 @@ dependencies {
     testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: "${cukesVersion}"
     testImplementation group: 'io.cucumber', name: 'cucumber-core', version: "${cukesVersion}"
 
+    // OpenAPI
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.5.10'
 
 }
 

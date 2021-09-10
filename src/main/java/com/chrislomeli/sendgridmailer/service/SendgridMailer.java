@@ -114,9 +114,9 @@ public class SendgridMailer implements ApplicationContextAware {
         sendgrid.addContent(new Content(MediaType.TEXT_HTML.toString(), mail.getContent()));
 
         /* Call back keys */
-        if (mail.customArgs != null && !mail.customArgs.isEmpty()) {
+        if (mail.getCustomArgs() != null && !mail.getCustomArgs().isEmpty()) {
             sendgrid.addCustomArg("mail-id", mailId);  //inject our mailId
-            mail.customArgs.forEach(sendgrid::addCustomArg); // inject values passed in
+            mail.getCustomArgs().forEach(sendgrid::addCustomArg); // inject values passed in
         }
 
         /* Tracking */
