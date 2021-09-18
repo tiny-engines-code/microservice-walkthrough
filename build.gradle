@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'jacoco'
 }
 
 group = 'com.chrislomeli'
@@ -69,5 +70,17 @@ test {
     testLogging.showStandardStreams = true
     testLogging {
         events "passed", "skipped", "failed"
+    }
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "com/chrislomeli/**/SendgridRequest.class",
+             ])
+        }))
     }
 }

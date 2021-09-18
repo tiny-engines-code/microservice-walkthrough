@@ -1,5 +1,6 @@
 package com.chrislomeli.sendgridmailer.service;
 
+import com.chrislomeli.sendgridmailer.config.Generated;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Generated
 public class SendgridRequest  {
     @Schema(description = "Sender name", required = true)
     String senderName;
