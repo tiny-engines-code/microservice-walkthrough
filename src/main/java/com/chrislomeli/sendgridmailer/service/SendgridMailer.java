@@ -1,5 +1,7 @@
 package com.chrislomeli.sendgridmailer.service;
 
+import com.chrislomeli.sendgridmailer.config.Generated;
+import com.chrislomeli.sendgridmailer.config.SendgridProperties;
 import com.sendgrid.Client;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
@@ -64,8 +66,13 @@ public class SendgridMailer implements ApplicationContextAware {
      */
     public Response send(SendgridRequest mailRequest) throws IOException {
         // simplistic validation for this example
-        if (sendgridProperties.apiKeyValue == null)
-            throw new RuntimeException("API key was not set - this should be set in an environment variable");
+        if (sendgridProperties.getApiKeyValue() == null || sendgridProperties.getApiKeyValue().isEmpty()) {
+            log.error("API key is not confgigured");
+            return new Response(HttpStatus.INTERNAL_SERVER_ERROR.value(), "API key is not set",
+                    Map.of("Content-type", "application/json","X-Source", "data-validation"));
+        }
+        log.info("API key is [{}]", sendgridProperties.getApiKeyValue() );
+
 
         // simplistic validation for this example
         if (!validRequest(mailRequest))
@@ -77,11 +84,11 @@ public class SendgridMailer implements ApplicationContextAware {
         // Create a SendGrid Request
         final Request request = new Request();
         request.setMethod(Method.POST);
-        request.setEndpoint("/" + sendgridProperties.apiVersion + "/" + "mail/send");
+        request.setEndpoint("/" + sendgridProperties.getApiVersion() + "/" + "mail/send");
         request.setBody(mailer.build());
-        request.setBaseUri(sendgridProperties.host);
-        request.addHeader("User-Agent", "sendgrid/" + sendgridProperties.apiVersion + ";java");
-        request.addHeader("Authorization", "Bearer " + sendgridProperties.apiKeyValue);
+        request.setBaseUri(sendgridProperties.getHost());
+        request.addHeader("User-Agent", "sendgrid/" + sendgridProperties.getApiVersion() + ";java");
+        request.addHeader("Authorization", "Bearer " + sendgridProperties.getApiKeyValue());
         request.addHeader("Accept", "application/json");
 
         // Send to the SendGrid API

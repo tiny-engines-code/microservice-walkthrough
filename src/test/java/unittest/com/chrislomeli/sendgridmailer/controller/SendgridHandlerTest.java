@@ -2,7 +2,7 @@ package unittest.com.chrislomeli.sendgridmailer.controller;
 
 import com.chrislomeli.sendgridmailer.controller.SendgridHandler;
 import com.chrislomeli.sendgridmailer.service.SendgridMailer;
-import com.chrislomeli.sendgridmailer.service.SendgridProperties;
+import com.chrislomeli.sendgridmailer.config.SendgridProperties;
 import com.chrislomeli.sendgridmailer.service.SendgridRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

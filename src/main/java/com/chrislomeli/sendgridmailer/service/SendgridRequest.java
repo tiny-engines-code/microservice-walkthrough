@@ -17,7 +17,6 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Generated
 public class SendgridRequest  {
     @Schema(description = "Sender name", required = true)
     String senderName;

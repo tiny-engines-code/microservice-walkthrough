@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%X{traceId} %-5p %d [%t] %c app=deliverses version=${releaseVersion} : %m%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <asyncLogger name="org.apache.log4j.xml" level="info"/>
+        <asyncLogger name="com.netflix" level="error"/>
+        <asyncLogger name="com.chrislomeli" level="info"/>
+
+        <asyncRoot level="info">
+            <AppenderRef ref="STDOUT"/>
+        </asyncRoot>
+    </Loggers>
+</Configuration>

@@ -2,7 +2,7 @@ package unittest.com.chrislomeli.sendgridmailer.service;
 
 import com.chrislomeli.sendgridmailer.controller.SendgridHandler;
 import com.chrislomeli.sendgridmailer.service.SendgridMailer;
-import com.chrislomeli.sendgridmailer.service.SendgridProperties;
+import com.chrislomeli.sendgridmailer.config.SendgridProperties;
 import com.chrislomeli.sendgridmailer.service.SendgridRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,9 +53,6 @@ class SendGridMailerTest {
 
     static ObjectMapper mapper = new ObjectMapper();
 
-    @Autowired
-    SendgridProperties sendgridProperties;
-
     @Mock
     private Client sendGridClient;
 
@@ -86,6 +83,10 @@ class SendGridMailerTest {
         );
     }
 
+    @BeforeEach
+    void Setup() {
+    }
+
     /*-------------------------------------------------
       Handle payload buiness scenarios
         missing fields, bad formatting, etc.
@@ -98,10 +99,7 @@ class SendGridMailerTest {
 
         // create an input sendgridRequest based on the parameterized values passed in and set properties
         var mailer = new SendgridMailer(sendGridClient);
-        sendgridProperties.setHost("mocked");
-        sendgridProperties.setApiKeyValue(this.apiKeyValue);
-        sendgridProperties.setApiVersion( this.apiVersion );
-        sendgridProperties.setSdkVersion( this.sdkVersion );
+
 
         // call SendgridMailer::send
         var response = mailer.send(
@@ -137,7 +135,9 @@ class SendGridMailerTest {
     void test_client_send_throws() throws Exception {
         when(sendGridClient.api(any(Request.class))).thenThrow(new RuntimeException("Badd JuJu"));
         var payload = createPayload("sender", "from@gmail.com", "to@gmail.com", "subject", "body", null);
-        var response = new SendgridHandler(new SendgridMailer(sendGridClient)).requestHandler(payload);
+
+        var mailer = new SendgridMailer(sendGridClient);
+        var response = new SendgridHandler(mailer).requestHandler(payload);
 
         assertAll(
                 () -> assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR.value()),
@@ -164,11 +164,6 @@ class SendGridMailerTest {
         lenient().when(sendGridClient.api(any(Request.class))).thenReturn(new Response(HttpStatus.OK.value(), "{}", null));
         var mailer = new SendgridMailer(sendGridClient);
 
-        sendgridProperties.setHost("mocked");
-        sendgridProperties.setApiKeyValue(this.apiKeyValue);
-        sendgridProperties.setApiVersion( this.apiVersion );
-        sendgridProperties.setSdkVersion( this.sdkVersion );
-
         var response = mailer.send(sendgridRequest);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
 
@@ -189,7 +184,6 @@ class SendGridMailerTest {
                 assertThat(ca).containsEntry(elem.getKey(), elem.getValue());
         }
     }
-
 
     // Utility method
     private String createPayload(String sender, String from, String to, String subject, String body, Map<String, String> customArgs) throws JsonProcessingException {

@@ -3,7 +3,7 @@ package acceptance.java.com.chrislomeli.sendgridmailer;
 import com.chrislomeli.sendgridmailer.controller.SendgridController;
 import com.chrislomeli.sendgridmailer.controller.SendgridHandler;
 import com.chrislomeli.sendgridmailer.service.SendgridMailer;
-import com.chrislomeli.sendgridmailer.service.SendgridProperties;
+import com.chrislomeli.sendgridmailer.config.SendgridProperties;
 import com.chrislomeli.sendgridmailer.service.SendgridRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sendgrid.Client;

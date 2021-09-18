@@ -1,5 +1,6 @@
 package com.chrislomeli.sendgridmailer.controller;
 
+import com.chrislomeli.sendgridmailer.config.Generated;
 import com.chrislomeli.sendgridmailer.service.SendgridMailer;
 import com.chrislomeli.sendgridmailer.service.SendgridRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
