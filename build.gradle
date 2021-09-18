@@ -31,40 +31,16 @@ configurations {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:2.5.4'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.5.4'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.4'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
     // sendgrid
     implementation group: 'com.sendgrid', name: 'sendgrid-java', version: '4.7.0'
+    implementation group: 'commons-validator', name: 'commons-validator', version: '1.7'
 
     // testing
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.6.0'
-    implementation group: 'commons-validator', name: 'commons-validator', version: '1.7'
-    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${mockitoVersion}"
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: "${mockitoVersion}"
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: "${mockitoVersion}"
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.20.2'
-
-    // wiremock
-    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '2.27.2'
-
-    // Cucumber
-    testImplementation group: 'io.cucumber', name: 'cucumber-java', version:  "${cukesVersion}"
-    testImplementation group: 'io.cucumber', name: 'cucumber-junit-platform-engine', version: "${cukesVersion}"
-    testImplementation group: 'io.cucumber', name: 'cucumber-spring', version: "${cukesVersion}"
-    testImplementation group: 'io.cucumber', name: 'cucumber-core', version: "${cukesVersion}"
-
-
-}
-
-test {
-    useJUnitPlatform()
-    testLogging.showStandardStreams = true
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
 }
